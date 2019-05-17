@@ -63,6 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="50dp"
+            android:paddingRight="50dp"
             android:orientation="vertical">
 
             <EditText
@@ -100,24 +101,10 @@
                 android:text="일정"/>
 
             <TextView
-                android:id="@+id/startDate"
+                android:id="@+id/tv_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:paddingLeft="50dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
-                android:gravity="center_vertical"
-                android:textSize="15dp"
-                android:textColor="#000"
-                tools:text="2019 년 5 월 17 일 ( 금 )"/>
-
-            <TextView
-                android:id="@+id/endDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-
                 android:paddingLeft="50dp"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
@@ -139,13 +126,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="50dp"
+            android:paddingRight="50dp"
             android:orientation="vertical">
 
             <EditText
                 android:id="@+id/et_context"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:background="@android:color/transparent"
                 android:textColor="#000"
                 android:textSize="15dp"

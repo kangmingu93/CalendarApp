@@ -4,16 +4,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.programers.calendarapp.fragments.DailyFragment;
 import com.programers.calendarapp.fragments.MonthlyFragment;
 import com.programers.calendarapp.fragments.WeeklyFragment;
+
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, View.OnClickListener {
 
     // 액션바
@@ -29,6 +35,32 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     private MonthlyFragment monthlyFragment = new MonthlyFragment(); // 월간
     private WeeklyFragment weeklyFragment = new WeeklyFragment(); // 주간
     private DailyFragment dailyFragment = new DailyFragment(); // 일간
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.calendar_now:
+                // 오늘 날짜로 이동
+                Fragment fragment = fragmentManager.findFragmentById(R.id.frameLayout);
+
+                if (fragment instanceof MonthlyFragment) {
+                    ((MonthlyFragment) fragment).moveNow();
+                } else if (fragment instanceof WeeklyFragment) {
+                    ((WeeklyFragment) fragment).moveNow();
+                }
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +126,17 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addFab:
+                Date date = null;
+
+                Fragment fragment = fragmentManager.findFragmentById(R.id.frameLayout);
+                if (fragment instanceof MonthlyFragment) {
+                    date = ((MonthlyFragment) fragment).getSelectedDate();
+                } else if (fragment instanceof WeeklyFragment) {
+                    date = ((WeeklyFragment) fragment).getSelectedDate();
+                }
+
                 Intent intent = new Intent(getApplicationContext(), EditActivity.class);
+                intent.putExtra("date", date);
                 startActivity(intent);
                 break;
         }

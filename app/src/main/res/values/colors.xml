@@ -4,9 +4,10 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
-    <color name="appAccent">#f56608</color>
-    <color name="appDefault">#9c9fa3</color>
-
     <color name="tab_select">#f56608</color>
     <color name="tab_unselect">#9c9fa3</color>
+
+    <color name="fab">#2196F3</color>
+    <color name="appAccent">#CD2196F3</color>
+    <color name="appDefault">#CDB6B9BD</color>
 </resources>

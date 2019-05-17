@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -13,6 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.programers.calendarapp.db.DatabaseOpenHelper;
+import com.programers.calendarapp.db.MyCalendar;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,7 +34,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     // 취소
     LinearLayout iv_close;
     // 날짜
-    TextView startDate, endDate;
+    TextView tv_date;
+    Date currentDate;
     // 메모
     EditText et_context;
 
@@ -56,14 +62,13 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         bt_save.setOnClickListener(this);
         iv_close = (LinearLayout) findViewById(R.id.iv_close);
         iv_close.setOnClickListener(this);
-        startDate = (TextView) findViewById(R.id.startDate);
-        startDate.setOnClickListener(this);
-        endDate = (TextView) findViewById(R.id.endDate);
-        endDate.setOnClickListener(this);
+        tv_date = (TextView) findViewById(R.id.tv_date);
+        tv_date.setOnClickListener(this);
 
-        startDate.setText(cal.get(Calendar.YEAR) + " 년 " + (cal.get(Calendar.MONTH) + 1) + " 월 " + cal.get(Calendar.DATE) + " 일 ( " + dayFormat.format(cal.getTime()) + " )");
-        endDate.setText(cal.get(Calendar.YEAR) + " 년 " + (cal.get(Calendar.MONTH) + 1) + " 월 " + cal.get(Calendar.DATE) + " 일 ( " + dayFormat.format(cal.getTime()) + " )");
-
+        Date date = (Date) getIntent().getSerializableExtra("date");
+        cal.setTime(date);
+        currentDate = cal.getTime();
+        tv_date.setText(cal.get(Calendar.YEAR) + " 년 " + (cal.get(Calendar.MONTH) + 1) + " 월 " + cal.get(Calendar.DATE) + " 일 ( " + dayFormat.format(cal.getTime()) + " )");
     }
 
     @Override
@@ -76,42 +81,47 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_save: // 완료 버튼
+
+                if (et_title.getText().toString().trim().equals("") || et_title.getText().toString() == null) {
+                    Toast.makeText(getApplicationContext(), "제목을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // 데이터베이스에 저장
+                DatabaseOpenHelper db = new DatabaseOpenHelper(this);
+
+                MyCalendar myCalendar = new MyCalendar();
+                myCalendar.setTitle(et_title.getText().toString());
+                myCalendar.setContext(et_context.getText().toString());
+                myCalendar.setDate(currentDate);
+
+                db.add(myCalendar);
+
+                finish();
                 break;
 
             case R.id.iv_close: // 취소 버튼
                 finish();
                 break;
 
-            case R.id.startDate: // 시작일
+            case R.id.tv_date: // 시작일
                 DatePickerDialog startDialog = new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                        String dayOfWeek = dayFormat.format(new Date(year, month, date-1));
-                        String msg = String.format("%d 년 %d 월 %d 일 ( %s )", year, month+1, date, dayOfWeek);
-                        startDate.setText(msg);
+                        Calendar cal1 = Calendar.getInstance();
+                        cal1.set(year, month, date);
+                        currentDate = cal1.getTime();
 
-                        Toast.makeText(EditActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        Log.d("onDateSet", currentDate.toString());
+
+                        String dayOfWeek = dayFormat.format(currentDate);
+                        String msg = String.format("%d 년 %d 월 %d 일 ( %s )", cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH) + 1, cal1.get(Calendar.DAY_OF_MONTH), dayOfWeek);
+                        tv_date.setText(msg);
                     }
                 }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
 
-//                dialog.getDatePicker().setMaxDate(new Date().getTime());    //입력한 날짜 이후로 클릭 안되게 옵션
+//                startDialog.getDatePicker().setMinDate(new Date().getTime());    //입력한 날짜 이전으로 클릭 안되게 옵션
                 startDialog.show();
-                break;
-
-            case R.id.endDate: // 종료일
-                DatePickerDialog endDialog = new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                        String dayOfWeek = dayFormat.format(new Date(year, month, date-1));
-                        String msg = String.format("%d 년 %d 월 %d 일 ( %s )", year, month+1, date, dayOfWeek);
-                        endDate.setText(msg);
-
-                        Toast.makeText(EditActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
-
-                endDialog.getDatePicker().setMinDate(new Date().getTime());    //입력한 날짜 이후로 클릭 안되게 옵션
-                endDialog.show();
                 break;
         }
     }

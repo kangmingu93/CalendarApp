@@ -13,46 +13,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
+        android:background="@color/appAccent"
         app:contentInsetStart="0dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/appAccent"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/iv_LeftArrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_arrow_left"/>
-
-            <TextView
-                android:id="@+id/tv_calendar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textColor="#fff"
-                android:textStyle="bold"
-                android:textSize="22dp"
-                android:text="5월 2019"
-                tools:text="5월 2019"/>
-
-            <ImageView
-                android:id="@+id/iv_RightArrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_arrow_right"/>
-
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/tv_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:text="5월 2019"
+            tools:text="5월 2019"/>
 
     </android.support.v7.widget.Toolbar>
 
@@ -103,8 +76,10 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
-        android:backgroundTint="@color/appAccent"
+        android:backgroundTint="@color/fab"
         android:src="@drawable/ic_add"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
         app:fabSize="normal" />
 
 </RelativeLayout>

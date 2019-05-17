@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">캘린더</string>
+
+    <string name="calendar_monthly">월간</string>
+    <string name="calendar_weekly">주간</string>
+    <string name="calendar_daily">일간</string>
+
+</resources>

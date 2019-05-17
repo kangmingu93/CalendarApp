@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 주간 화면 -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:mcv_firstDayOfWeek="sunday"
+        app:mcv_calendarMode="week"
+        app:mcv_selectionColor="@color/appAccent"
+        app:mcv_showOtherDates="all">
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:numColumns="7"
+            android:listSelector="@android:color/transparent"/>
+
+    </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
+
+</RelativeLayout>

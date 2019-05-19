@@ -55,6 +55,9 @@ public class WeeklyFragment extends Fragment implements OnDateSelectedListener, 
         materialCalendarView = (MaterialCalendarView) view.findViewById(R.id.calendarView);
         listView = (ListView) view.findViewById(R.id.listView);
 
+        // 날짜 라벨 설정
+        String[] weekLabels = {"월", "화", "수", "목", "금", "토", "일"};
+        materialCalendarView.setWeekDayLabels(weekLabels);
         // 날짜 선택 이벤트
         materialCalendarView.setOnDateChangedListener(this);
         // 달력 이동 이벤트
@@ -126,7 +129,10 @@ public class WeeklyFragment extends Fragment implements OnDateSelectedListener, 
             DatabaseOpenHelper db = new DatabaseOpenHelper(getContext());
             ArrayList<MyCalendar> myCalendarList = db.getAll(start, end);
 
-            // 일정 정보가 있다면
+            // 전체 표시 제거
+            materialCalendarView.removeDecorators();
+
+            // 일정 정보가 있다면 표시
             if (myCalendarList != null && myCalendarList.size() > 0) {
                 initDecorators(myCalendarList);
             }
@@ -148,9 +154,6 @@ public class WeeklyFragment extends Fragment implements OnDateSelectedListener, 
 
     // 일정을 달력에 표시
     private void initDecorators(ArrayList<MyCalendar> list) {
-        // 전체 표시 제거
-        materialCalendarView.removeDecorators();
-
         // 데이터베이스에서 가져온 리스트가 비어있지 않다면
         HashSet<CalendarDay> days = new HashSet<CalendarDay>();
 

@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
@@ -26,6 +25,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTEXT = "context";
     private static final String KEY_DATE = "date";
+
+    // 데이터 포맷
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * 데이터베이스 헬퍼 생성자
@@ -55,49 +57,44 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // 추가
+    /**
+     * 일정 추가
+     * @param myCalendar 일정 정보 데이터 객체
+     */
     public void add(MyCalendar myCalendar) {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE, myCalendar.getTitle());
         values.put(KEY_CONTEXT, myCalendar.getContext());
         values.put(KEY_DATE, dateFormat.format(myCalendar.getDate()));
 
-        Log.d("add", myCalendar.getTitle() + "/" + myCalendar.getContext() + "/" + myCalendar.getDate());
-
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
 
-    // 검색
+    /**
+     * 일정 가져오기
+     * @param start 시작일
+     * @param end 종료일
+     * @return 시작일부터 종료일까지 해당되는 일정 리스트
+     * @throws ParseException
+     */
     public ArrayList<MyCalendar> getAll(String start, String end) throws ParseException {
         ArrayList<MyCalendar> myCalendarList = new ArrayList<MyCalendar>();
 
         String SELECT = "SELECT * FROM "
                 + TABLE_NAME
-                + " WHERE date BETWEEN '"
+                + " WHERE " + KEY_DATE +" BETWEEN '"
                 + start
                 + "' AND '"
                 + end
-                + "';";
-
-//        String SELECT = "SELECT * FROM "
-//                + TABLE_NAME
-//                + ";";
-
-        Log.d("getAll", SELECT);
+                + "' ORDER BY " + KEY_DATE + " ASC, " + KEY_ID + " ASC;";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(SELECT, null);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
         while (cursor.moveToNext()) {
-            Log.d("getAll", cursor.getString(0) + "/" + cursor.getString(1) + "/" + cursor.getString(2) + "/" + cursor.getString(3));
-
             MyCalendar myCalendar = new MyCalendar();
             myCalendar.setId(Integer.parseInt(cursor.getString(0)));
             myCalendar.setTitle(cursor.getString(1));
@@ -109,5 +106,67 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         }
 
         return myCalendarList;
+    }
+
+    /**
+     * 조건 검색
+     * @param id 검색할 레코드의 기본키
+     * @return MyCalendar 객체
+     * @throws ParseException
+     */
+    public MyCalendar getCalendar(long id) throws ParseException {
+        MyCalendar myCalendar = new MyCalendar();
+
+        String SELECT = "SELECT * FROM "
+                + TABLE_NAME
+                + " WHERE " + KEY_ID +" = " + id
+                + ";";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(SELECT, null);
+        cursor.moveToFirst();
+
+        myCalendar.setId(Integer.parseInt(cursor.getString(0)));
+        myCalendar.setTitle(cursor.getString(1));
+        myCalendar.setContext(cursor.getString(2));
+        Date date = dateFormat.parse(cursor.getString(3));
+        myCalendar.setDate(date);
+
+        return myCalendar;
+    }
+
+    /**
+     * 일정 수정
+     * @param myCalendar 일정 정보 데이터 객체
+     */
+    public void update(MyCalendar myCalendar) {
+        String UPDATE = "UPDATE "
+                + TABLE_NAME
+                + " SET " + KEY_TITLE + " = '" + myCalendar.getTitle()
+                + "' , " + KEY_DATE + " = '" + dateFormat.format(myCalendar.getDate())
+                + "' , " + KEY_CONTEXT + " = '" + myCalendar.getContext()
+                + "' WHERE " + KEY_ID + " = " + myCalendar.getId()
+                + ";";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(UPDATE);
+
+        Log.d("Database.update", "id : " + myCalendar.getId() + " 수정 완료");
+    }
+
+    /**
+     * 일정 삭제
+     * @param id 삭제할 레코드의 기본키
+     */
+    public void delete(long id) {
+        String DELETE = "DELETE FROM "
+                + TABLE_NAME
+                + " WHERE " + KEY_ID + " = " + id
+                + ";";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(DELETE);
+
+        Log.d("Database.delete", "id : " + id + " 삭제 완료");
     }
 }

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/calendar_now"
-        android:title="now"
+        android:title="오늘"
         android:icon="@drawable/ic_calendar_now"
         app:showAsAction="always"/>
+
 </menu>

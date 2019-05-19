@@ -1,6 +1,8 @@
-package com.programers.calendarapp;
+package com.programers.calendarapp.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -10,18 +12,22 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.programers.calendarapp.R;
 import com.programers.calendarapp.fragments.DailyFragment;
 import com.programers.calendarapp.fragments.MonthlyFragment;
 import com.programers.calendarapp.fragments.WeeklyFragment;
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, View.OnClickListener {
-
+    // 날짜
+    public static Calendar calendar = Calendar.getInstance(Locale.KOREA); // 기본 오늘
     // 액션바
     ActionBar actionBar;
     // 프래그먼트 관리
@@ -48,15 +54,19 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         switch (id) {
             case R.id.calendar_now:
                 // 오늘 날짜로 이동
-                Fragment fragment = fragmentManager.findFragmentById(R.id.frameLayout);
+                calendar = Calendar.getInstance(Locale.KOREA);
 
+                Fragment fragment = fragmentManager.findFragmentById(R.id.frameLayout);
                 if (fragment instanceof MonthlyFragment) {
-                    ((MonthlyFragment) fragment).moveNow();
+                    ((MonthlyFragment) fragment).getNow();
                 } else if (fragment instanceof WeeklyFragment) {
-                    ((WeeklyFragment) fragment).moveNow();
+                    ((WeeklyFragment) fragment).getNow();
+                } else if (fragment instanceof DailyFragment) {
+                    ((DailyFragment) fragment).getNow();
                 }
 
                 break;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -67,14 +77,13 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 로딩 화면 실행
+        Intent loadingIntent = new Intent(this, LoadingActivity.class);
+        startActivity(loadingIntent);
+
         // 툴바
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
-
-        actionBar = this.getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true); // 커스텀 사용 O
-        actionBar.setDisplayShowTitleEnabled(false); // 제목 표시 X
-        actionBar.setDisplayShowHomeEnabled(false); // 뒤로가기 버튼 표시 X
 
         // 탭 레이아웃
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -83,14 +92,41 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         fab = (FloatingActionButton) findViewById(R.id.addFab);
         fab.setOnClickListener(this);
 
-        // 기본으로 월간
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frameLayout, monthlyFragment).commitNowAllowingStateLoss();
+        // Shared Preference를 불러온다
+        SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        int pos = pref.getInt("tab", 0);
+        // 저장된 값을 불러와 탭을 이동
+        tabLayout.getTabAt(pos).select();
+        // 화면 전환
+        changeView(pos);
+
+        Log.d("MainActivity.onCreate()", "Tab : " + pos);
+
+        actionBar = this.getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true); // 커스텀 사용 O
+        actionBar.setDisplayShowTitleEnabled(false); // 제목 표시 X
+        actionBar.setDisplayShowHomeEnabled(false); // 뒤로가기 버튼 표시 X
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // 화면이 사라질때 탭 정보를 저장
+        SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        int pos = tabLayout.getSelectedTabPosition();
+        editor.putInt("tab", pos);
+        editor.commit();
+
+        Log.d("MainActivity.onStop()", "Tab : " + pos);
     }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         int pos = tab.getPosition();
+        // 화면 전환
         changeView(pos);
     }
 
@@ -126,18 +162,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addFab:
-                Date date = null;
 
-                Fragment fragment = fragmentManager.findFragmentById(R.id.frameLayout);
-                if (fragment instanceof MonthlyFragment) {
-                    date = ((MonthlyFragment) fragment).getSelectedDate();
-                } else if (fragment instanceof WeeklyFragment) {
-                    date = ((WeeklyFragment) fragment).getSelectedDate();
-                }
-
+                // 일정 입력 화면으로 이동
                 Intent intent = new Intent(getApplicationContext(), EditActivity.class);
-                intent.putExtra("date", date);
+                intent.putExtra("date", calendar.getTime());
                 startActivity(intent);
+
                 break;
         }
     }

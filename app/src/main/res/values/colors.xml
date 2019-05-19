@@ -4,10 +4,20 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
+    <!-- Tab Color -->
     <color name="tab_select">#f56608</color>
     <color name="tab_unselect">#9c9fa3</color>
 
+    <!-- Floating Action Button-->
     <color name="fab">#2196F3</color>
+
+    <!-- App Color -->
     <color name="appAccent">#CD2196F3</color>
     <color name="appDefault">#CDB6B9BD</color>
+
+    <!-- BookLoading Animation -->
+    <color name="book_loading_background">#ffffff</color>
+    <color name="book_loading_book">#ff33b5e5</color>
+    <color name="book_loading_page">#ffffff</color>
+
 </resources>

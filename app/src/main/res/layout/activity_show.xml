@@ -14,49 +14,6 @@
         android:background="@color/appAccent"
         app:contentInsetStart="0dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:orientation="horizontal">
-
-            <!-- 취소 버튼 -->
-            <TextView
-                android:id="@+id/tv_close"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                android:background="?attr/selectableItemBackground"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:onClick="onClick"
-                android:textStyle="bold"
-                android:textColor="#FFF"
-                android:textSize="16dp"
-                android:text="취소"/>
-
-            <!--<View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="#80FFFFFF"/>-->
-
-            <!-- 완료 버튼 -->
-            <TextView
-                android:id="@+id/tv_save"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                android:background="?attr/selectableItemBackground"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:onClick="onClick"
-                android:textStyle="bold"
-                android:textColor="#FFF"
-                android:textSize="16dp"
-                android:text="저장"/>
-
-        </LinearLayout>
-
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
@@ -70,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:paddingRight="10dp"
+            android:layout_marginBottom="15dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -81,31 +39,24 @@
                 android:src="@drawable/ic_text"/>
 
             <!-- 제목 -->
-            <EditText
-                android:id="@+id/et_title"
+            <TextView
+                android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="일정을 입력하세요."
                 android:paddingLeft="10dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
                 android:textStyle="bold"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textColor="#000"
+                android:hint="제목"/>
 
         </LinearLayout>
-
-        <!-- 선 -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="#80A2A2A2"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -121,25 +72,16 @@
                 android:id="@+id/tv_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:layout_marginRight="10dp"
-                android:onClick="onClick"
                 android:textSize="15dp"
                 android:textColor="#000"
-                tools:text="2019 년 5 월 17 일 ( 금 )"/>
+                android:hint="2019 년 5 월 17 일 ( 금요일 )"
+                tools:text="2019 년 5 월 17 일 ( 금요일 )"/>
 
         </LinearLayout>
-
-        <!-- 선 -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="#80A2A2A2"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -155,18 +97,17 @@
                 android:src="@drawable/ic_memo"/>
 
             <!-- 메모 -->
-            <EditText
-                android:id="@+id/et_context"
+            <TextView
+                android:id="@+id/tv_context"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="@android:color/transparent"
                 android:textColor="#000"
                 android:textSize="15dp"
-                android:hint="메모를 입력하세요."/>
+                android:hint="내용 없음."/>
 
         </LinearLayout>
 
